@@ -1,0 +1,48 @@
+cd C:\Users\ACER\OneDrive\Desktop\final_project_skripsi\apps\api
+
+rmdir /s /q .venv
+py -3.12 -m venv .venv
+.\.venv\Scripts\activate
+
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install --no-cache-dir -r requirements_core.txt
+
+
+uvicorn app.main:app --reload --port 8000
+http://127.0.0.1:8000
+http://127.0.0.1:8000/api/health
+http://127.0.0.1:8000/api/dataset
+
+_________________________________________________
+Catatan penting (biar hasil prediksi konsisten)
+
+Di file:
+apps/api/app/routes/predict.py
+
+Ada baris:
+
+prob_hoax = predict_proba(final_text, padding="pre", truncating="pre")
+
+
+Kalau saat training kamu pakai post, ubah jadi:
+
+prob_hoax = predict_proba(final_text, padding="post", truncating="post")
+
+
+
+Library yang digunakan: 
+
+fastapi==0.115.0
+h5py==3.11.0
+jinja2==3.1.4
+joblib==1.4.2
+nltk==3.9.1
+numpy==1.26.4
+opencv-python==4.10.0.84
+pandas==2.2.2
+pillow==10.4.0
+pytesseract==0.3.13
+python-multipart==0.0.9
+scikit-learn==1.5.2
+tensorflow==2.18.0
+uvicorn[standard]==0.30.6

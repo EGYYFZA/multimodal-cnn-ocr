@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Deteksi Berita Hoaks</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <header class="topbar flex-direction-column justify-content-center align-items-center animate-fade">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <div class="logo">🛡️</div>
+        <div>
+          <div class="brand-title">DeteksiHoax</div>
+          <div class="brand-sub">Multi‑Kernel CNN & OCR</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero animate-in delay-1">
+      <div class="hero-card">
+        <div class="hero-content">
+          <div class="kicker">DETEKSI BERITA HOAKS</div>
+          <h1>Analisis cepat berita &amp; media menggunakan Multi Kernel 1D CNN & OCR</h1>
+          <p>
+            Masukkan judul dan isi berita, <b>atau</b> unggah <b>gambar/video</b> yang berisi teks.
+            Sistem menampilkan <b>label</b> dan <b>probabilitas hoaks</b> untuk membantu verifikasi.
+          </p>
+          <div class="hero-actions">
+            <button class="btn ghost" type="button" id="btnGuide">Lihat Panduan</button>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="/static/assets/laptop.png" alt="Laptop illustration" />
+        </div>
+      </div>
+    </section>
+
+    <section id="deteksi" class="grid">
+      <div class="card animate-in delay-2">
+        <div class="card-hd">
+          <div class="ttl">Input Berita</div>
+        </div>
+        <div class="card-bd">
+          <form id="f" enctype="multipart/form-data">
+            <label for="title">Judul Berita</label>
+            <input id="title" name="title" type="text" placeholder="Contoh: Pemerintah mengumumkan kebijakan baru..." />
+
+            <label for="body">Isi Berita / Caption</label>
+            <textarea id="body" name="body" rows="7" placeholder="Tempelkan isi berita atau caption yang ingin dicek di sini..."></textarea>
+
+            <div class="row">
+              <div>
+                <label>🖼️ Gambar</label>
+                <label class="file-input" id="imgFileInput">
+                  <span>
+                    <b id="imgname">(tidak ada file)</b><br>
+                    <span class="small">JPG/PNG</span>
+                  </span>
+                  <span class="btn-subtle" id="imgUploadBtn">Upload</span>
+                  <input id="img" type="file" name="image_file" accept="image/*" capture="environment">
+                </label>
+                <img id="imgprev" class="preview" alt="Preview gambar" />
+              </div>
+
+              <div>
+                <label>🎞️ Video</label>
+                <label class="file-input" id="vidFileInput">
+                  <span>
+                    <b id="vidname">(tidak ada file)</b><br>
+                    <span class="small">Saran: video pendek</span>
+                  </span>
+                  <span class="btn-subtle" id="vidUploadBtn">Upload</span>
+                  <input id="vid" type="file" name="video_file" accept="video/*">
+                </label>
+              </div>
+            </div>
+
+            <div class="actions">
+              <div class="actions-left">
+                <button class="btn primary" type="submit">Deteksi Sekarang ▶</button>
+                <span id="loading" class="small" style="display:none;">Memproses…</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card animate-in delay-3">
+        <div class="card-hd">
+          <div class="ttl">Hasil Prediksi</div>
+        </div>
+        <div class="card-bd">
+          <div id="result" class="result-main">Kirim teks atau media untuk melihat hasil deteksi.</div>
+
+          <div class="prob-wrap">
+            <div class="prob-label">
+              <span class="strong">Probabilitas</span>
+              <span id="probtext" class="small">0.00</span>
+            </div>
+            <div class="prob-track">
+              <div id="bar" class="prob-fill"></div>
+            </div>
+          </div>
+
+          <div class="meta">
+            <div class="ocr-info" id="ocrInfo" style="display: none;">
+              <div class="ocr-status">
+                <span class="badge badge-info">OCR Digunakan</span>
+                <span class="small">Media uploaded</span>
+              </div>
+              <div class="ocr-text-wrap">
+                <div class="small"><b>Teks yang akan diproses:</b></div>
+                <div class="ocr-text-box" id="ocrTextBox">(tidak ada teks)</div>
+              </div>
+            </div>
+            <div class="small" id="modeInfo"><span id="mode" class="small"></span></div>
+          </div>
+        
+<div class="ev-card" id="evidence">
+  <div class="ev-hd">
+    <div class="ttl">Berita Terkait</div>
+    <div class="cap">Menampilkan berita yang paling mirip dari dataset lokal</div>
+  </div>
+  <div class="ev-bd" id="evidenceList">
+    <div class="small">Belum ada bukti. Jalankan deteksi untuk melihat hasil pencarian.</div>
+  </div>
+</div>
+</div>
+      </div>
+    </section>
+
+    <footer id="tentang" class="footer animate-in delay-4">
+      <b>Tentang</b><br>
+      Website ini dibuat untuk penelitian skripsi deteksi berita hoaks menggunakan Multi‑Kernel CNN.
+      Hasil bersifat probabilistik gunakan sebagai alat bantu
+      <i>by Seggy Ferdianza.</i>, 
+    </footer>
+  </main>
+
+  <div class="modal-backdrop" id="guideBackdrop" role="dialog" aria-modal="true" aria-label="Panduan">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="ttl">Panduan singkat</div>
+        <button class="x" type="button" id="closeGuide">✕</button>
+      </div>
+      <div class="modal-bd">
+        <ol>
+          <li><b>Pilih salah satu</b>: Isi teks (judul + isi berita) <b>atau</b> unggah gambar <b>atau</b> unggah video.</li>
+          <li>Unggah <b>gambar</b> jika berita berupa poster/screenshot.</li>
+          <li>Unggah <b>video pendek</b> jika teks ada di video.</li>
+          <li>Klik <b>Deteksi Sekarang</b> lalu lihat hasil.</li>
+          <li>Untuk menghapus file yang sudah diupload, klik tombol <b>✕</b> merah.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
