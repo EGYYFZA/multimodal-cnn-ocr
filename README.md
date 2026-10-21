@@ -1,5 +1,18 @@
 # HoaxShield - Deteksi Berita Hoaks dengan Multi-Kernel CNN + OCR
 
+> **Status:** research prototype for local use. Model scores below are project-reported and have not been independently reproduced. Do not treat predictions as verified facts.
+
+## Security and validation
+
+The upload endpoint has no authentication or rate limiting. Keep it local until the upload parser dependencies, request-body limits, OCR timeouts, and deployment controls have been reviewed. Limiting reads inside the endpoint does not limit the earlier multipart parsing stage. Never load untrusted pickle/joblib model files.
+
+```sh
+node --test tests/evidence-security.test.cjs
+python -m unittest discover -s tests -p test_upload_limits.py
+```
+
+See [SECURITY.md](SECURITY.md).
+
 ## 📌 Overview
 
 Sistem deteksi berita hoaks menggunakan Multi-Kernel 1D CNN dengan dukungan OCR untuk ekstraksi teks dari gambar dan video. Model di-training dengan preprocessing yang konsisten untuk akurasi tinggi.
@@ -49,7 +62,7 @@ pip install -r apps/requirements.txt
 
 # Atau manual
 cd apps/api
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 3. Access Web Interface

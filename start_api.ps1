@@ -40,4 +40,4 @@ Write-Host "http://localhost:8000" -ForegroundColor Yellow
 Write-Host ""
 
 # Start server dengan path relatif dari .venv yang benar
-& "$PROJECT_ROOT/.venv/Scripts/python.exe" -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+& "$PROJECT_ROOT/.venv/Scripts/python.exe" -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000

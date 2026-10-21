@@ -21,7 +21,8 @@ const evidenceList = document.getElementById('evidenceList');
 
 function esc(s){
   return (s || '').toString()
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 function num(x, fallback=0){
@@ -51,7 +52,7 @@ function renderEvidence(items){
     const title = esc(it.title || '(tanpa judul)');
     const url = (it.url || '').toString().trim();
 
-    const titleHTML = url
+    const titleHTML = /^https?:\/\//i.test(url)
       ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="ev-link-compact">${title}</a>`
       : `<span class="ev-text-compact">${title}</span>`;
 
