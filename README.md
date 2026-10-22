@@ -1,5 +1,23 @@
 # HoaxShield - Deteksi Berita Hoaks dengan Multi-Kernel CNN + OCR
 
+> **Status:** research prototype for local use. Model scores below are project-reported and have not been independently reproduced. Do not treat predictions as verified facts.
+
+## Security and validation
+
+The upload endpoint has no authentication or rate limiting. Keep it local until the upload parser dependencies, request-body limits, OCR timeouts, and deployment controls have been reviewed. Limiting reads inside the endpoint does not limit the earlier multipart parsing stage. Never load untrusted pickle/joblib model files.
+
+```sh
+node --test tests/evidence-security.test.cjs
+python -m pip install -r apps/api/requirements_core.txt httpx==0.28.1
+python -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+See [SECURITY.md](SECURITY.md).
+
+CI installs the application dependencies, runs `pip check`, exercises the real FastAPI/Jinja/form/upload stack with model, dataset, OCR, and logging services replaced by test doubles, and scans the requirements using `pip-audit`. These checks do not reproduce model accuracy or run OCR. The two deployment manifests use the same updated FastAPI, Jinja, Pillow, and python-multipart pins; successful CI and dependency-audit results are still required before considering deployment.
+
+Use Python 3.11 or newer with the updated image stack. NLTK is not used by the API preprocessing code and is no longer installed by its manifests. The unused `USE_NLTK_STOPWORDS` setting has been removed; the active preprocessing logic is unchanged. Notebook research may have separate dependency requirements.
+
 ## 📌 Overview
 
 Sistem deteksi berita hoaks menggunakan Multi-Kernel 1D CNN dengan dukungan OCR untuk ekstraksi teks dari gambar dan video. Model di-training dengan preprocessing yang konsisten untuk akurasi tinggi.
@@ -49,7 +67,7 @@ pip install -r apps/requirements.txt
 
 # Atau manual
 cd apps/api
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 3. Access Web Interface
@@ -249,7 +267,7 @@ Model menggunakan sigmoid output. Pilih threshold berdasarkan trade-off:
 
 ## 🔍 Evidence/Similarity Search
 
-Sistem menyediakan fitur "Evidence" untuk menampilkan berita serupa dari dataset referensi (Kompas valid news, TurnBackHoax database). Ini hanya untuk **referensi tambahan**, bukan untuk override keputusan model.
+Sistem menyediakan fitur "Evidence" untuk menampilkan berita serupa dari dataset referensi (Kompas valid news, TurnBackHoax database). Pada input pendek atau OCR, keputusan hybrid dapat mengganti label CNN berdasarkan evidence. Hasil tetap perlu diverifikasi secara independen.
 
 Dataset referensi:
 
@@ -268,4 +286,4 @@ Framework: FastAPI + TensorFlow 2.18
 ---
 
 **Last Updated:** January 28, 2026  
-**Status:** ✅ Production Ready (99.29% validation accuracy)
+**Status:** Research prototype. The reported 99.29% validation accuracy has not been independently reproduced; deployment security remains under review.

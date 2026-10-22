@@ -162,7 +162,7 @@ def _cv2_preprocess_variants(img: Image.Image) -> List[Image.Image]:
     # Resize hanya jika terlalu kecil (threshold dikurangi untuk speed)
     if max(w, h) < 1200:
         scale = 1200 / max(w, h)
-        img = img.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
+        img = img.resize((int(w * scale), int(h * scale)), Image.Resampling.LANCZOS)
 
     arr = np.array(img)
     g = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)

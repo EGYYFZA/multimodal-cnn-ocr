@@ -30,7 +30,7 @@ if ($successMatch) {
 }
 
 Write-Host "`n[4] Server Ready to Start" -ForegroundColor Green
-Write-Host "    Command: python -m uvicorn apps.api.app.main:app --reload --host 0.0.0.0 --port 8000" -ForegroundColor Gray
+Write-Host "    Command: python -m uvicorn apps.api.app.main:app --reload --host 127.0.0.1 --port 8000" -ForegroundColor Gray
 
 Write-Host "`n" + "="*80 -ForegroundColor Cyan
 Write-Host " OPTIMIZATION SUMMARY" -ForegroundColor Yellow  
@@ -61,8 +61,8 @@ if ($response -eq "y") {
     Write-Host "Server will be available at: " -NoNewline
     Write-Host "http://localhost:8000" -ForegroundColor Cyan
     Write-Host ""
-    python -m uvicorn apps.api.app.main:app --reload --host 0.0.0.0 --port 8000
+    python -m uvicorn apps.api.app.main:app --reload --host 127.0.0.1 --port 8000
 } else {
     Write-Host "`nServer not started. Run manually:" -ForegroundColor Yellow
-    Write-Host "  python -m uvicorn apps.api.app.main:app --reload --host 0.0.0.0 --port 8000" -ForegroundColor Gray
+    Write-Host "  python -m uvicorn apps.api.app.main:app --reload --host 127.0.0.1 --port 8000" -ForegroundColor Gray
 }

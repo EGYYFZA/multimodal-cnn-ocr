@@ -37,7 +37,7 @@ async def predict(
 
     # ---- OCR Image ----
     if image_file is not None:
-        img_bytes = await image_file.read()
+        img_bytes = await image_file.read(settings.max_upload_mb * 1024 * 1024 + 1)
         if len(img_bytes) > settings.max_upload_mb * 1024 * 1024:
             raise HTTPException(status_code=413, detail=f"Gambar terlalu besar (max {settings.max_upload_mb} MB).")
 
@@ -49,7 +49,7 @@ async def predict(
 
     # ---- OCR video ----
     if video_file is not None:
-        vid_bytes = await video_file.read()
+        vid_bytes = await video_file.read(settings.max_upload_mb * 1024 * 1024 + 1)
         if len(vid_bytes) > settings.max_upload_mb * 1024 * 1024:
             raise HTTPException(status_code=413, detail=f"Video terlalu besar (max {settings.max_upload_mb} MB).")
 
@@ -207,9 +207,8 @@ async def predict(
             decision_mode = "HYBRID-EVIDENCE"
         
         # FINAL FALLBACK: Video OCR dengan minimal 1 evidence - gunakan evidence #1
-        elif used_ocr and evidence_items and len(evidence_items) > 0:
-            top_evidence = evidence_items[0]
-            top_label = "HOAKS" if top_evidence.get("label") == "hoax" else "VALID"
+        elif used_ocr and top_evidence_label is not None:
+            top_label = top_evidence_label
             
             print(f"[VIDEO FALLBACK] No strong majority, using top evidence: {top_label} (was: {label})")
             
