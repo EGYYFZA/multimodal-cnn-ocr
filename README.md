@@ -16,6 +16,8 @@ See [SECURITY.md](SECURITY.md).
 
 CI installs the application dependencies, runs `pip check`, exercises the real FastAPI/Jinja/form/upload stack with model, dataset, OCR, and logging services replaced by test doubles, and scans the requirements using `pip-audit`. These checks do not reproduce model accuracy or run OCR. The two deployment manifests use the same updated FastAPI, Jinja, Pillow, and python-multipart pins; successful CI and dependency-audit results are still required before considering deployment.
 
+Use Python 3.11 or newer with the updated image stack. NLTK is not used by the API preprocessing code and is no longer installed by its manifests. The unused `USE_NLTK_STOPWORDS` setting has been removed; the active preprocessing logic is unchanged. Notebook research may have separate dependency requirements.
+
 ## 📌 Overview
 
 Sistem deteksi berita hoaks menggunakan Multi-Kernel 1D CNN dengan dukungan OCR untuk ekstraksi teks dari gambar dan video. Model di-training dengan preprocessing yang konsisten untuk akurasi tinggi.

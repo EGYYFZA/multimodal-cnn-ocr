@@ -9,9 +9,6 @@ class Settings:
 
     operating_tau: float = float(os.getenv("OPERATING_TAU", "0.45"))
 
-    # Opsional: match notebook dengan NLTK stopwords (kalau corpus tersedia)
-    use_nltk_stopwords: bool = os.getenv("USE_NLTK_STOPWORDS", "0").strip().lower() not in ("0","false","no")
-
     max_text_chars: int = int(os.getenv("MAX_TEXT_CHARS", "12000"))
     max_upload_mb: int = int(os.getenv("MAX_UPLOAD_MB", "25"))
 

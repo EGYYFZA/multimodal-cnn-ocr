@@ -131,7 +131,6 @@ pip install --no-cache-dir fastapi
 pip install --no-cache-dir uvicorn
 pip install --no-cache-dir python-multipart
 pip install --no-cache-dir scikit-learn
-pip install --no-cache-dir nltk
 ```
 
 ## Verifikasi Instalasi

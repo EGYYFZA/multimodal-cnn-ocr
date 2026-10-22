@@ -75,6 +75,7 @@ class WebSmokeTests(unittest.TestCase):
         with Image.open(io.BytesIO(payload)) as decoded:
             decoded.load()
             self.assertEqual(decoded.size, (2, 2))
+            self.assertEqual(decoded.resize((4, 4), Image.Resampling.LANCZOS).size, (4, 4))
         response = self.client.post('/api/predict', files={'image_file': ('image.png', payload, 'image/png')})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['label'], 'NO_TEXT')

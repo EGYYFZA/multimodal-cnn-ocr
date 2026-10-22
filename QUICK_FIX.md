@@ -74,7 +74,7 @@ $env:PIP_CACHE_DIR = "F:\pip_cache"
 pip install --no-cache-dir tensorflow
 pip install --no-cache-dir fastapi uvicorn
 pip install --no-cache-dir opencv-python pytesseract
-pip install --no-cache-dir pandas numpy scikit-learn nltk
+pip install --no-cache-dir pandas numpy scikit-learn
 pip install --no-cache-dir python-multipart
 
 # 6. Test
