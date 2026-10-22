@@ -14,7 +14,7 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 
 See [SECURITY.md](SECURITY.md).
 
-CI installs the application dependencies, runs `pip check`, and exercises the real FastAPI/Jinja/form/upload stack with model, dataset, OCR, and logging services replaced by test doubles. These checks do not reproduce model accuracy or run OCR. The two deployment manifests use the same updated FastAPI, Jinja, Pillow, and python-multipart pins; successful CI and a fresh dependency audit are still required before considering deployment.
+CI installs the application dependencies, runs `pip check`, exercises the real FastAPI/Jinja/form/upload stack with model, dataset, OCR, and logging services replaced by test doubles, and scans the requirements using `pip-audit`. These checks do not reproduce model accuracy or run OCR. The two deployment manifests use the same updated FastAPI, Jinja, Pillow, and python-multipart pins; successful CI and dependency-audit results are still required before considering deployment.
 
 ## 📌 Overview
 
