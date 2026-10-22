@@ -8,10 +8,13 @@ The upload endpoint has no authentication or rate limiting. Keep it local until 
 
 ```sh
 node --test tests/evidence-security.test.cjs
-python -m unittest discover -s tests -p test_upload_limits.py
+python -m pip install -r apps/api/requirements_core.txt httpx==0.28.1
+python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 See [SECURITY.md](SECURITY.md).
+
+CI installs the application dependencies, runs `pip check`, and exercises the real FastAPI/Jinja/form/upload stack with model, dataset, OCR, and logging services replaced by test doubles. These checks do not reproduce model accuracy or run OCR. The two deployment manifests use the same updated FastAPI, Jinja, Pillow, and python-multipart pins; successful CI and a fresh dependency audit are still required before considering deployment.
 
 ## 📌 Overview
 
@@ -262,7 +265,7 @@ Model menggunakan sigmoid output. Pilih threshold berdasarkan trade-off:
 
 ## 🔍 Evidence/Similarity Search
 
-Sistem menyediakan fitur "Evidence" untuk menampilkan berita serupa dari dataset referensi (Kompas valid news, TurnBackHoax database). Ini hanya untuk **referensi tambahan**, bukan untuk override keputusan model.
+Sistem menyediakan fitur "Evidence" untuk menampilkan berita serupa dari dataset referensi (Kompas valid news, TurnBackHoax database). Pada input pendek atau OCR, keputusan hybrid dapat mengganti label CNN berdasarkan evidence. Hasil tetap perlu diverifikasi secara independen.
 
 Dataset referensi:
 
@@ -281,4 +284,4 @@ Framework: FastAPI + TensorFlow 2.18
 ---
 
 **Last Updated:** January 28, 2026  
-**Status:** ✅ Production Ready (99.29% validation accuracy)
+**Status:** Research prototype. The reported 99.29% validation accuracy has not been independently reproduced; deployment security remains under review.
