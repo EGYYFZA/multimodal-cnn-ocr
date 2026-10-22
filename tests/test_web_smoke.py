@@ -14,21 +14,24 @@ from PIL import Image
 class WebSmokeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.previous_cwd = Path.cwd()
+        previous_cwd = Path.cwd()
         api = Path(__file__).resolve().parents[1] / 'apps/api'
         sys.path.insert(0, str(api))
+        cls.addClassCleanup(sys.path.pop, 0)
         os.chdir(api)
+        cls.addClassCleanup(os.chdir, previous_cwd)
+        cls.loaded = []
         doubles = {}
         functions = {
             'model_service': {
-                'load_model_on_startup': lambda: None,
+                'load_model_on_startup': lambda: cls.loaded.append('model'),
                 'model_info': lambda: {'output_mode': 'sigmoid'},
                 'predict_proba': lambda *a, **k: 0.2,
                 'decide_label': lambda *a: 'VALID',
                 'get_confidence_level': lambda *a: 'test',
             },
             'dataset_service': {
-                'load_datasets_on_startup': lambda: None,
+                'load_datasets_on_startup': lambda: cls.loaded.append('dataset'),
                 'dataset_stats': lambda: {},
                 'search_similar': lambda *a, **k: [],
             },
@@ -46,19 +49,12 @@ class WebSmokeTests(unittest.TestCase):
             module = ModuleType('app.services.' + name)
             module.__dict__.update(members)
             doubles[module.__name__] = module
-        cls.patches = patch.dict(sys.modules, doubles)
-        cls.patches.start()
+        cls.enterClassContext(patch.dict(sys.modules, doubles))
         from app.main import create_app
-        cls.client = TestClient(create_app())
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.client.close()
-        cls.patches.stop()
-        os.chdir(cls.previous_cwd)
-        sys.path.pop(0)
+        cls.client = cls.enterClassContext(TestClient(create_app()))
 
     def test_home_template_renders(self):
+        self.assertEqual(self.loaded, ['model', 'dataset'])
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn('<title>Deteksi Berita Hoaks</title>', response.text)
