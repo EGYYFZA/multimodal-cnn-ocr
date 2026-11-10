@@ -1,4 +1,6 @@
-<img src=".github/media/cover.png" alt="HoaxShield — multimodal research" width="1280">
+<img src=".github/media/cover.png" alt="DeteksiHoax frontend with an empty news form" width="1280">
+
+<sub>Frontend preview from this repository; no model inference was run.</sub>
 
 # HoaxShield
 
